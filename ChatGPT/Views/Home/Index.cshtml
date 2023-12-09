@@ -1,0 +1,322 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background-color: #f0f0f0;
+    }
+
+    .main-container {
+        display: flex;
+        flex-direction: column;
+        height: 70vh; 
+    }
+    .chatGPTMain-container {
+             flex: 1;
+        overflow-y: auto;
+        padding: 10px;
+    }
+
+    .container, .latest-text-box {
+        background-color: #ffffff;
+        border-radius: 8px;
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+
+    .container {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .radio-button {
+        margin-right: 10px;
+    }
+
+    .text-box {
+        border: 1px solid #ccc;
+        padding: 10px;
+        border-radius: 5px;
+    }
+
+    .latest-text-box {
+        border: 1px solid #0f38a3;
+        padding: 10px;
+        border-radius: 5px;
+        background-color: antiquewhite;
+    }
+
+    input[type="text"] {
+        flex: 1; /* Allow the input box to take up the remaining space */
+        padding: 8px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    .chatbox-input input {
+        position: relative;
+        width: 90%;
+        margin: 0 20px;
+        padding: 10px 20px;
+        border-radius: 10px;
+        font-size: 1em;
+        border: none;
+        outline: none;
+    }
+
+    label {
+        font-size: 16px;
+        margin-bottom: 8px;
+      
+        padding: 8px; /* Add some padding for better visual appeal */
+        border-radius: 4px; /* Optional: Add rounded corners */
+    }
+    .chatbox-input {
+        display: flex; /* Use flex display for the input and send prompt to be side by side */
+        flex-direction: column;
+        padding: 10px;
+        background-color: #ffffff;
+    }
+
+    #userInputPromptId {
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        box-sizing: border-box;
+        width: 70%;
+        padding: 8px;
+    }
+
+    #subjecttId{
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        box-sizing: border-box;
+        width: 70%;
+        padding: 8px;
+    }
+    #sendPromptId {
+        cursor: pointer;
+        margin-left: 10px;
+    }
+
+    #errorWindowId {
+        margin-left: 66px;
+    }
+
+    span#errorWindowId {
+        color: red;
+    }
+
+    .warningClass {
+        display: inline-block;
+        padding: 10px 20px;
+        font-size: 13px;
+        font-weight: bold;
+        text-align: center;
+        text-decoration: none;
+        cursor: pointer;
+        border: none;
+        border-radius: 23px;
+        color: white;
+        background-color: #ef4c4c;
+    }
+
+
+    /**latest one*/
+    body {
+        height: 100vh;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+    }
+
+    #message-container {
+        flex: 1;
+        overflow-y: auto;
+        padding: 10px;
+        border-bottom: 1px solid #ccc;
+    }
+
+    #input-box {
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        border-top: 1px solid #ccc;
+    }
+
+    #message-container p {
+        margin: 0;
+        padding: 5px;
+        background-color: #f2f2f2;
+        border-radius: 8px;
+        max-width: 70%;
+    }
+
+    #input-box input {
+        flex: 1;
+        padding: 8px;
+        margin: 0 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    #input-box button {
+        padding: 8px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+        #input-box button:hover {
+            background-color: #45a049;
+        }
+
+    .separator {
+        position: absolute;
+        width: 100%;
+        height: 1px;
+        background-color: #ccc;
+        bottom: 0;
+    }
+
+    #sendPromptButtonParentId{
+        text-align: right;
+    }
+    /*end of latest*/
+
+</style>
+
+<div class="text-center">
+    <h1 class="display-4">Welcome to Personal ChatGPT</h1>
+
+</div>
+
+<div id='responseContainerMainId' class="main-container">
+    <div id="chatGPTMainContainerId" class="chatGPTMain-container">
+        <div class="separator"></div>
+    </div>
+   
+    <div class="chatbox-input">
+        <label>Enter the  subject:</label><input id="subjecttId" type="text" placeholder="Type a Subject">
+    </div>
+
+    <div class="chatbox-input">
+        <label>What you want to ask about the above subject?</label><input id="userInputPromptId" type="text" placeholder="Type your query around the subject">
+        <div id="sendPromptButtonParentId">Send <img onclick="sendPrompt()" src="/img/chatGPTpost.svg" width="20px;" height="20px" data-other-src="/img/chatGPTpost.svg"></div>
+       
+    </div>
+    <span id="errorWindowId"></span>
+
+
+</div>
+
+<script>
+
+   
+
+
+
+    function sendPrompt() {
+        var promptInput = $("#userInputPromptId").val();
+        var subjectInput = $("#subjecttId").val();
+        if (promptInput === "") {
+
+            $("#errorWindowId").text("type something to ask with chatGPT");
+        }
+        else {
+            $("#sendPromptButtonParentId").empty();
+            $("#sendPromptButtonParentId").html('<img src="/img/chatGPTLoadingDots.gif" width="20px; " height="20px" class="peerReviewSaveProcess" data-other-src="/img/chatGPTLoadingDots.gif">')
+
+
+
+            $("#errorWindowId").text('');
+            // Display "Waiting..." with typing effect
+            displayTypingText("Awaiting for the response from chatGPT", 60, '#errorWindowId');
+
+            // Simulate a delay of one minute (60,000 milliseconds)
+            setTimeout(function () {
+                // Enable the button after the delay
+                $('#sendPromptId').prop('disabled', false);
+            }, 60000);
+
+            var queryDetails = new Object();
+            queryDetails.UserPrompt = promptInput;
+            queryDetails.TextToRefine = subjectInput;
+            $.ajax({
+                type: "POST",
+                url: "/api/ChatGPT/useChatGPT",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify(queryDetails),
+                success: function (data) {
+                    if (data.data != '') {
+                        $("#errorWindowId").text('');
+                        $('.container input.radio-button').removeAttr('checked');
+                        $('div.latest-text-box').addClass('text-box').removeClass('latest-text-box');
+                        $("#userInputPromptId").val('');
+                        var chatGptNewresponse = '<div class="container">';
+                        chatGptNewresponse += '<input type="radio" name="chatGPTGroup" class="radio-button" checked="checked">';
+                        chatGptNewresponse += '<div class="latest-text-box">';
+                        chatGptNewresponse += '<p>' + data.data + '</p>';
+                        chatGptNewresponse += '</div>';
+                        chatGptNewresponse += '</div>';
+                        $("#chatGPTMainContainerId").append($(chatGptNewresponse));
+                        $("#sendPromptButtonParentId").empty();
+                        $("#sendPromptButtonParentId").html('<img id="sendPromptId" onclick="sendPrompt()"   src="/img/chatGPTpost.svg" width="20px;" height="20px" data-other-src="/img/chatGPTpost.svg">');
+                    }
+                    else {
+                        var chatGptNoresponse = '<div class="container">';
+                        chatGptNoresponse += '<div class="text-box">';
+                        chatGptNoresponse += '<p>oops!!! ChatGPT didn\'t respond!! Try after few seconds</p>';
+                        chatGptNoresponse += '</div>';
+                        chatGptNoresponse += '</div>';
+                        $("#chatGPTMainContainerId").append($(chatGptNoresponse));
+                        $("#userInputPromptId").val('');
+                        $("#errorWindowId").text('');
+                        $("#sendPromptButtonParentId").empty();
+                        $("#sendPromptButtonParentId").html('<img id="sendPromptId" onclick="sendPrompt()"   src="/img/chatGPTpost.svg" width="20px;" height="20px" data-other-src="/img/chatGPTpost.svg">');
+                    }
+                },
+                failure: function (data) {
+                    alert(data.responseText);
+                },
+                error: function (data) {
+                    alert(data.responseText);
+                }
+            });
+        }
+    }
+
+    function displayTypingText(text, delay, targetSelector) {
+        var index = 0;
+        var intervalId = setInterval(function () {
+            var partialText = text.substring(0, index + 1);
+            $(targetSelector).text(partialText);
+            index++;
+
+            if (index === text.length) {
+                clearInterval(intervalId);
+            }
+        }, delay);
+    }
+
+    
+</script>
+
+
+
+
+
+
+
+
+
